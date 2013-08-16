@@ -1,7 +1,9 @@
 #!/bin/bash
 
 if [ -f "$1/composer.json" ]; then
-    echo "PHP (composer.json)" && exit 0
+    echo "PHP (because composer.json in root)" && exit 0
+elif [ -f "$1/index.php" ]; then
+    echo "PHP (because index.php in root)" && exit 0
 else
     exit 1
 fi
