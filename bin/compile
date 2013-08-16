@@ -51,6 +51,8 @@ echo "-----> Vendoring binaries into slug"
 
 cp -R "$VENDORED_HHVM/" "vendor/hhvm"
 
+cp "$basedir/../conf/config.hdf $VENDORED_HHVM"
+
 # Test that all packages were fetched and extracted successfully
 test -d "vendor/hhvm"
 
