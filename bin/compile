@@ -39,7 +39,7 @@ function install_composer_deps() {
     echo "-----> Installing application dependencies with Composer"
     {
         cd "$target"
-        "$BUILD_DIR/vendor/php/bin/php" \
+        "LD_LIBRARY_PATH=vendor/hhvm $BUILD_DIR/vendor/hhvm/hhvm" \
             "$target/vendor/composer/bin/composer.phar" install \
             --prefer-dist \
             --optimize-autoloader \
