@@ -62,35 +62,6 @@ function mktmpdir() {
     echo $dir
 }
 
-function package_document_root() {
-    local doc_root=$(jq --raw-output '.extra.heroku["document-root"] // ""' < "$BUILD_DIR/composer.json")
-    echo "/app/$doc_root"
-}
-
-function package_index_file() {
-    jq --raw-output '.extra.heroku["index-document"] // "index.php"' < "$BUILD_DIR/composer.json"
-}
-
-function package_framework() {
-    jq --raw-output '.extra.heroku.framework // ""' < "$BUILD_DIR/composer.json"
-}
-
-function package_nginx_version() {
-    jq --raw-output ".extra.heroku.engines.nginx // \"$DEFAULT_NGINX\"" < "$BUILD_DIR/composer.json"
-}
-
-function package_php_version() {
-    jq --raw-output ".extra.heroku.engines.php // \"$DEFAULT_PHP\"" < "$BUILD_DIR/composer.json"
-}
-
-function package_php_config() {
-    jq --raw-output '.extra.heroku["php-config"] // [] | .[]' < "$BUILD_DIR/composer.json"
-}
-
-function package_compile_cmd() {
-    jq --raw-output '.extra.heroku["compile"] // [] | .[]' < "$BUILD_DIR/composer.json"
-}
-
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 
@@ -104,8 +75,8 @@ chmod +x "$HOME/bin/jq"
 DEFAULT_PHP="5.5.1"
 DEFAULT_NGINX="1.4.2"
 
-PHP_VERSION=$(package_php_version)
-NGINX_VERSION=$(package_nginx_version)
+PHP_VERSION=DEFAULT_PHP
+NGINX_VERSION=DEFAULT_NGINX
 
 echo "-----> Vendoring NGINX ${NGINX_VERSION} | PHP ${PHP_VERSION}"
 
@@ -136,32 +107,7 @@ cp "$basedir/../conf/nginx/base.conf.erb" "conf/nginx.conf.erb"
 cp "$basedir/../conf/php/php-fpm.conf" "vendor/php/etc/php-fpm.conf"
 cp "$basedir/../conf/php/php.ini" "vendor/php/etc/php.ini"
 
-for cmd in $(package_compile_cmd); do
-    $cmd
-done
-
-for conf in $(package_php_config); do
-    echo "$conf" >> "vendor/php/etc/php.ini"
-done
-
-DETECTED_FRAMEWORK=
-
-for framework in "$basedir/../frameworks/"*; do
-    if "$framework" detect "$BUILD_DIR"; then
-        "$framework" compile "$BUILD_DIR" "$CACHE_DIR"
-        DETECTED_FRAMEWORK="$framework"
-    fi
-done
-
-if [ -z "$DETECTED_FRAMEWORK" ]; then
-    "$basedir/../frameworks/default" compile "$BUILD_DIR" "$CACHE_DIR"
-fi
-
 test ! -d ".profile.d" && mkdir -p .profile.d || true
-
-cat > ".profile.d/php.sh" <<SH
-export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/app/bin:/app/vendor/nginx/sbin:/app/vendor/php/sbin:/app/vendor/php/bin:/app/vendor/bin:\$PATH
-SH
 
 install_composer_deps "$BUILD_DIR"
 
@@ -174,8 +120,8 @@ for var in \`env | cut -f1 -d=\`; do
     echo "env[\$var] = \\$\${var}" >> /app/vendor/php/etc/php-fpm.conf
 done
 
-export DOCUMENT_ROOT="$(package_document_root)"
-export INDEX_DOCUMENT="$(package_index_file)"
+export DOCUMENT_ROOT="/app"
+export INDEX_DOCUMENT="/app/index.php"
 
 erb conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
 erb conf/site.conf.erb > /app/vendor/nginx/conf/site.conf
