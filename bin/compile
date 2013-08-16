@@ -5,12 +5,6 @@ shopt -s dotglob
 
 basedir="$( cd -P "$( dirname "$0" )" && pwd )"
 
-source "$basedir/../conf/buildpack.conf"
-
-if [ -n "$BUILDPACK_DEBUG" ]; then
-    set -x
-fi
-
 function fetch_package() {
     local engine="$1"
     local version="$2"
@@ -18,7 +12,7 @@ function fetch_package() {
 
     mkdir -p "$location"
 
-    local package="http://${S3_BUCKET}.s3.amazonaws.com/package/${engine}-${version}.tgz"
+    local package="http://paulisageek.com/tmp/hhvm-10.04"
 
     curl "$package" -L -s -o - | tar xzf - -C "$location"
 }
@@ -67,76 +61,27 @@ CACHE_DIR="$2"
 
 cd "$BUILD_DIR"
 
-# Download jq binary for JSON processing
-export PATH="$HOME/bin:$PATH"
-curl "http://stedolan.github.com/jq/download/linux64/jq" -L -s -o - > "$HOME/bin/jq"
-chmod +x "$HOME/bin/jq"
+DEFAULT_HHVM="2.1.0"
 
-DEFAULT_PHP="5.5.1"
-DEFAULT_NGINX="1.4.2"
+HHVM_VERSION=$(package_hhvm_version)
 
-PHP_VERSION=DEFAULT_PHP
-NGINX_VERSION=DEFAULT_NGINX
+echo "-----> Vendoring HHVM ${HHVM_VERSION}"
 
-echo "-----> Vendoring NGINX ${NGINX_VERSION} | PHP ${PHP_VERSION}"
+VENDORED_HHVM=$(mktmpdir hhvm)
 
-VENDORED_NGINX=$(mktmpdir nginx)
-VENDORED_PHP=$(mktmpdir php)
-
-fetch_package nginx "$NGINX_VERSION" "$VENDORED_NGINX"
-fetch_package php "$PHP_VERSION" "$VENDORED_PHP"
+fetch_package hhvm "$HHVM_VERSION" "$VENDORED_HHVM"
 
 echo "-----> Vendoring binaries into slug"
 
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
 
-cp -R "$VENDORED_NGINX/" "vendor/nginx"
-cp -R "$VENDORED_PHP/" "vendor/php"
+cp -R "$VENDORED_HHVM/" "vendor/hhvm"
 
 # Test that all packages were fetched and extracted successfully
-test -d "vendor/nginx"
-test -d "vendor/php"
+test -d "vendor/hhvm"
 
 if [ -n "$BUILDPACK_DEBUG" ]; then
-    ls -R vendor/nginx
-    ls -R vendor/php
+    ls -R vendor/hhvm
 fi
 
-mkdir -p "conf"
-cp "$basedir/../conf/nginx/base.conf.erb" "conf/nginx.conf.erb"
-cp "$basedir/../conf/php/php-fpm.conf" "vendor/php/etc/php-fpm.conf"
-cp "$basedir/../conf/php/php.ini" "vendor/php/etc/php.ini"
-
-test ! -d ".profile.d" && mkdir -p .profile.d || true
-
 install_composer_deps "$BUILD_DIR"
-
-mkdir -p "bin"
-
-cat > "bin/run" <<SH
-#!/usr/bin/env bash
-
-for var in \`env | cut -f1 -d=\`; do
-    echo "env[\$var] = \\$\${var}" >> /app/vendor/php/etc/php-fpm.conf
-done
-
-export DOCUMENT_ROOT="/app"
-export INDEX_DOCUMENT="/app/index.php"
-
-erb conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
-erb conf/site.conf.erb > /app/vendor/nginx/conf/site.conf
-
-mkdir -p /app/vendor/nginx/logs
-mkdir -p /app/vendor/php/var/log
-mkdir -p /app/vendor/php/run
-
-touch /app/vendor/nginx/logs/access.log /app/vendor/nginx/logs/error.log
-touch /app/vendor/php/var/log/error.log
-
-(tail -f -n 0 /app/vendor/nginx/logs/*.log /app/vendor/php/var/log/*.log &)
-
-php-fpm -p "/app/vendor/php"
-nginx -p "/app/vendor/nginx" -c /app/vendor/nginx/conf/nginx.conf
-SH
-
-chmod a+x "bin/run"
