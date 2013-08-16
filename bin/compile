@@ -25,30 +25,6 @@ function indent() {
     esac
 }
 
-function install_composer_deps() {
-    local cwd=$(pwd)
-    local target="$1"
-
-    echo "-----> Vendoring Composer"
-    {
-        mkdir -p "$target/vendor/composer/bin"
-        curl -L "http://getcomposer.org/composer.phar" > "$target/vendor/composer/bin/composer.phar"
-        chmod a+x "$target/vendor/composer/bin/composer.phar"
-    } | indent
-
-    echo "-----> Installing application dependencies with Composer"
-    {
-        cd "$target"
-        "LD_LIBRARY_PATH=vendor/hhvm $BUILD_DIR/vendor/hhvm/hhvm" \
-            "$target/vendor/composer/bin/composer.phar" install \
-            --prefer-dist \
-            --optimize-autoloader \
-            --no-interaction
-
-        cd "$cwd"
-    } | indent
-}
-
 function mktmpdir() {
     dir=$(mktemp -t php-$1-XXXX)
     rm -rf $dir
@@ -81,5 +57,3 @@ test -d "vendor/hhvm"
 if [ -n "$BUILDPACK_DEBUG" ]; then
     ls -R vendor/hhvm
 fi
-
-install_composer_deps "$BUILD_DIR"
