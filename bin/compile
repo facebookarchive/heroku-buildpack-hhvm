@@ -12,7 +12,7 @@ function fetch_package() {
 
     mkdir -p "$location"
 
-    local package="http://paulisageek.com/tmp/hhvm.tgz"
+    local package="https://dl.dropboxusercontent.com/u/4259135/hhvm.tgz"
 
     curl "$package" -L -s -o - | tar xzf - -C "$location"
 }
