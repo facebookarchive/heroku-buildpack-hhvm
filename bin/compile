@@ -61,9 +61,7 @@ CACHE_DIR="$2"
 
 cd "$BUILD_DIR"
 
-DEFAULT_HHVM="2.1.0"
-
-HHVM_VERSION=$(package_hhvm_version)
+HHVM_VERSION="2.1.0"
 
 echo "-----> Vendoring HHVM ${HHVM_VERSION}"
 
