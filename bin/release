@@ -5,5 +5,5 @@ cat << EOF
 addons:
 config_vars:
 default_process_types:
-  web: hhvm -m server -p $PORT
+  web: ./vendor/hhvm/hhvm -m server -p $PORT
 EOF
