@@ -41,15 +41,19 @@ HHVM_VERSION="2.1.0"
 
 echo "-----> Vendoring HHVM ${HHVM_VERSION}"
 
-VENDORED_HHVM=$(mktmpdir hhvm)
-
-fetch_package hhvm "$HHVM_VERSION" "$VENDORED_HHVM"
+if [ -d "$CACHE_DIR/hhvm" ]; then
+  echo "-----> $CACHE_DIR/hhvm exists, not downloading";
+else
+  echo "-----> Downloading HHVM"
+  mkdir "$CACHE_DIR/hhvm"
+  fetch_package hhvm "$HHVM_VERSION" "$CACHE_DIR/hhvm"
+fi
 
 echo "-----> Vendoring binaries into slug"
 
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
 
-cp -R "$VENDORED_HHVM/" "vendor/hhvm"
+cp -R "$CACHE_DIR/hhvm/" "vendor/hhvm"
 
 cp "$basedir/../conf/config.hdf" "vendor/hhvm"
 
