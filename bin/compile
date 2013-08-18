@@ -45,6 +45,7 @@ if [ -d "$CACHE_DIR/hhvm" ]; then
   echo "-----> $CACHE_DIR/hhvm exists, not downloading";
 else
   echo "-----> Downloading HHVM"
+  [ ! -d "CACHE_DIR" ] && mkdir -p "$CACHE_DIR"
   mkdir "$CACHE_DIR/hhvm"
   fetch_package hhvm "$HHVM_VERSION" "$CACHE_DIR/hhvm"
 fi
