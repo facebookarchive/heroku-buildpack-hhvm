@@ -15,6 +15,8 @@ To use it with a new app:
 Or to convert your existing PHP app:
 
     heroku config:set BUILDPACK_URL=https://github.com/ptarjan/heroku-buildpack-hhvm
+    <make some git change and commit it>
+    git push
 
 ## Performance
 
