@@ -8,7 +8,6 @@ BUILD_DIR="$1"
 CACHE_DIR="$2"
 
 source $BASE_DIR/common
-source $BASE_DIR/config
 
 cd "$BUILD_DIR"
 
@@ -20,7 +19,7 @@ else
   echo "-----> Downloading HHVM"
   [ ! -d "CACHE_DIR" ] && mkdir -p "$CACHE_DIR"
   mkdir "$CACHE_DIR/hhvm"
-  fetch_package hhvm "$HHVM_VERSION" "$CACHE_DIR/hhvm"
+  fetch_package "$CACHE_DIR/hhvm"
 fi
 
 # Install HHVM binaries
