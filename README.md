@@ -18,6 +18,13 @@ Or to convert your existing PHP app:
     <make some git change and commit it>
     git push
 
+If your app needs a custom [configuration
+file](https://github.com/facebook/hiphop-php/blob/master/hphp/doc/options.compiled) just save it in the root of your project. Otherwise, a default one will be applied with the following settings:
+
+    Server {
+      DefaultDocument=index.php
+    }
+
 ## Performance
 
 You should see anywhere between 2x and 10x performance gains on your app. 
