@@ -22,7 +22,7 @@ If your app needs a custom [configuration
 file](https://github.com/facebook/hiphop-php/blob/master/hphp/doc/options.compiled) just save it in the root of your project. Otherwise, a default one will be applied with the following settings:
 
     Server {
-      DefaultDocument=index.php
+      DefaultDocument = index.php
     }
 
 ## Performance
