@@ -34,9 +34,9 @@ if [ -f "$BUILD_DIR/config.hdf" ]; then
   echo "-----> Found custom config.hdf, linting"
 
   lint_results="$(lint "$BUILD_DIR/config.hdf")"
-
-  if [[ ! -z "$lint_results" ]]; then
-    echo "$lint_results"
+  
+  if [ "$lint_results" ]; then
+    #echo "$lint_results"
     echo "-----> Aborting - can't push bad config"
     exit 1
   else 
