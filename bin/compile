@@ -36,7 +36,7 @@ if [ -f "$BUILD_DIR/config.hdf" ]; then
   lint_results="$(lint "$BUILD_DIR/config.hdf")"
   
   if [ "$lint_results" ]; then
-    #echo "$lint_results"
+    echo "$lint_results"
     echo "-----> Aborting - can't push bad config"
     exit 1
   else 
