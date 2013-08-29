@@ -64,8 +64,9 @@ function lint() {
         # We need to reset the count or else it will yell at every closing
         # brace
         braces_count=0
+      else 
+        braces_count=$((braces_count-1))
       fi
-      braces_count=$((braces_count-1))
       continue
     fi
 
