@@ -36,7 +36,9 @@ if [ -f "$BUILD_DIR/config.hdf" ]; then
   lint_results="$(lint "$BUILD_DIR/config.hdf")"
 
   if [[ ! -z "$lint_results" ]]; then
+    echo "$lint_results"
     echo "-----> Aborting - can't push bad config"
+    exit 1
   else 
     echo "-----> Config file is valid, uploading"
     cp "$BUILD_DIR/config.hdf" "vendor/hhvm"
