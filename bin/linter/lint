@@ -61,6 +61,9 @@ function lint() {
     elif [[ ${line:0} == "}" ]]; then
       if [[ $braces_count -eq 0 ]]; then
         echo "-----> Unexpected closing brace found on line ${line_no}"
+        # We need to reset the count or else it will yell at every closing
+        # brace
+        braces_count=0
       fi
       braces_count=$((braces_count-1))
       continue
