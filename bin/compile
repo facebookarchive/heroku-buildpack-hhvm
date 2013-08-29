@@ -8,6 +8,7 @@ BUILD_DIR="$1"
 CACHE_DIR="$2"
 
 source $BASE_DIR/common
+source $BASE_DIR/linter/lint
 
 cd "$BUILD_DIR"
 
@@ -30,8 +31,13 @@ cp -R "$CACHE_DIR/hhvm/" "vendor/hhvm"
 # Source config file
 echo "-----> Sourcing config.hdf"
 if [ -f "$BUILD_DIR/config.hdf" ]; then
-  echo "-----> Found custom config.hdf, uploading"
-  cp "$BUILD_DIR/config.hdf" "vendor/hhvm"
+  echo "-----> Found custom config.hdf, linting"
+  lint_results="$(lint "$BUILD_DIR/config.hdf")"
+  if [[ ! -z "$lint_results" ]]; then
+    echo "-----> Aborting - can't push bad config"
+  else 
+    echo "-----> Config file is valid, uploading"
+    cp "$BUILD_DIR/config.hdf" "vendor/hhvm"
 else 
   echo "-----> Custom config.hdf not found, applying default"
   cp "$BASE_DIR/../conf/config.hdf" "vendor/hhvm"
