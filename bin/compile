@@ -3,44 +3,17 @@
 set -e
 shopt -s dotglob
 
-basedir="$( cd -P "$( dirname "$0" )" && pwd )"
-
-function fetch_package() {
-    local engine="$1"
-    local version="$2"
-    local location="$3"
-
-    mkdir -p "$location"
-
-    local package="http://dl.hhvm.com/heroku/hhvm.tgz"
-
-    curl "$package" -L -s -o - | tar xzf - -C "$location"
-}
-
-function indent() {
-    c='s/^/       /'
-    case $(uname) in
-        Darwin) sed -l "$c";;
-        *)      sed -u "$c";;
-    esac
-}
-
-function mktmpdir() {
-    dir=$(mktemp -t php-$1-XXXX)
-    rm -rf $dir
-    mkdir -p $dir
-    echo $dir
-}
-
+BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 
+source $BASE_DIR/common
+source $BASE_DIR/config
+
 cd "$BUILD_DIR"
 
-HHVM_VERSION="2.1.0"
-
+# Download HHVM binaries, if necessary
 echo "-----> Vendoring HHVM ${HHVM_VERSION}"
-
 if [ -d "$CACHE_DIR/hhvm" ]; then
   echo "-----> $CACHE_DIR/hhvm exists, not downloading";
 else
@@ -50,13 +23,20 @@ else
   fetch_package hhvm "$HHVM_VERSION" "$CACHE_DIR/hhvm"
 fi
 
+# Install HHVM binaries
 echo "-----> Vendoring binaries into slug"
-
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
-
 cp -R "$CACHE_DIR/hhvm/" "vendor/hhvm"
 
-cp "$basedir/../conf/config.hdf" "vendor/hhvm"
+# Source config file
+echo "-----> Sourcing config.hdf"
+if [ -f "$BUILD_DIR/config.hdf" ]; then
+  echo "-----> Found custom config.hdf, uploading"
+  cp "$BUILD_DIR/config.hdf" "vendor/hhvm"
+else 
+  echo "-----> Custom config.hdf not found, applying default"
+  cp "$BASE_DIR/../conf/config.hdf" "vendor/hhvm"
+fi
 
 # Test that all packages were fetched and extracted successfully
 test -d "vendor/hhvm"
