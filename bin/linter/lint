@@ -1,0 +1,80 @@
+#!/bin/bash
+
+function trim() {
+  local var=$1
+  # remove leading whitespace chars
+  var="${var#"${var%%[![:space:]]*}"}"
+  # remove trailing whitespace chars
+  var="${var%"${var##*[![:space:]]}"}"  
+
+  echo -n "$var"
+}
+
+function is_node_name_valid() {
+  local node_name=$(trim "$1")
+  local pattern=" |'"
+
+  if [[ ! $node_name =~ $pattern ]] ;then 
+    continue
+  else 
+    echo "-----> Unexpected node name in ${CONFIG} on line ${2}"
+    echo "       $3"
+  fi
+}
+
+function is_config_line_valid() {
+  IFS='=' read -a pair <<< "$1"
+  if [[ ${#pair[@]} -eq 2 ]]; then
+    continue
+  else
+    echo "-----> Bad config key-value pair in ${CONFIG} on line ${2}"
+    echo "       $3"
+  fi
+}
+
+function lint() {
+  local line_no=0
+  local braces_count=0
+
+  while read line; do
+    line_no=$((line_no+1))
+    
+    # skip comments
+    [[ ${line:0:1} == "#" ]] && continue
+    
+    # skip empty lines
+    [[ -z $line ]] && continue
+
+    # do we have an open tag ?
+    if [[ ${line:$((${#line}-1))} == "{" ]]; then
+      braces_count=$((braces_count+1))
+
+      # strip "{"
+      node_name=${line:0:$((${#line}-1))}
+
+      # validate node name
+      is_node_name_valid "$node_name" $line_no "$line" 
+
+      continue
+
+    # found close tag, skip
+    elif [[ ${line:0} == "}" ]]; then
+      if [[ $braces_count -eq 0 ]]; then
+        echo "-----> Unexpected closing brace found on line ${line_no}"
+        # We need to reset the count or else it will yell at every closing
+        # brace
+        braces_count=0
+      else 
+        braces_count=$((braces_count-1))
+      fi
+      continue
+    fi
+
+    # validate config line
+    is_config_line_valid "$line" $line_no "$line"
+  done < "$1"
+
+  if [[ ! $braces_count -eq 0 ]]; then
+    echo "-----> Braces don't match. Found ${braces_count} more than expected."
+  fi
+}
