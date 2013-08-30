@@ -1,4 +1,5 @@
-# Heroku Buildpack for HHVM
+# Heroku Buildpack for HHVM [![Build
+Status](https://travis-ci.org/ptarjan/heroku-buildpack-hhvm.png?branch=master)](https://travis-ci.org/ptarjan/heroku-buildpack-hhvm)
 
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks)
 for PHP apps to run on HHVM.
