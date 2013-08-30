@@ -1,0 +1,12 @@
+Bad Value {
+  BadValue
+}
+# Extra brace, why not?
+} 
+
+Foo {
+  * {
+    this : is : invalid
+    value = 
+  }
+# Missing a brace too, like a boss

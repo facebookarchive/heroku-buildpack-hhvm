@@ -1,0 +1,10 @@
+-----> Unexpected node name in test_2.in on line 1
+       Bad Value {
+-----> Bad config value in test_2.in on line 2
+       BadValue
+-----> Unexpected closing brace found on line 5
+-----> Bad config value in test_2.in on line 9
+       this : is : invalid
+-----> Bad config value in test_2.in on line 10
+       value =
+-----> Braces don't match. Found 1 more than expected.

@@ -17,17 +17,23 @@ function is_node_name_valid() {
   if [[ ! $node_name =~ $pattern ]] ;then 
     continue
   else 
-    echo "-----> Unexpected node name in ${CONFIG} on line ${2}"
+    echo "-----> Unexpected node name in ${4} on line ${2}"
     echo "       $3"
   fi
 }
 
 function is_config_line_valid() {
-  IFS='=' read -a pair <<< "$1"
-  if [[ ${#pair[@]} -eq 2 ]]; then
+  IFS='=' read -a pair_eq <<< "$1"
+  IFS=':' read -a pair_colon <<< "$1"
+  
+  # Check possible config values:
+  # - @Foo
+  # - foo = bar
+  # - foo : bar
+  if [[ ${1:0:1} == "@" || ${#pair_eq[@]} -ge 2 || ${#pair_colon[@]} -eq 2 ]]; then 
     continue
   else
-    echo "-----> Bad config key-value pair in ${CONFIG} on line ${2}"
+    echo "-----> Bad config value in ${4} on line ${2}"
     echo "       $3"
   fi
 }
@@ -53,7 +59,7 @@ function lint() {
       node_name=${line:0:$((${#line}-1))}
 
       # validate node name
-      is_node_name_valid "$node_name" $line_no "$line" 
+      is_node_name_valid "$node_name" $line_no "$line" "$1"
 
       continue
 
@@ -71,7 +77,7 @@ function lint() {
     fi
 
     # validate config line
-    is_config_line_valid "$line" $line_no "$line"
+    is_config_line_valid "$line" $line_no "$line" "$1"
   done < "$1"
 
   if [[ ! $braces_count -eq 0 ]]; then

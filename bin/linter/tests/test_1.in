@@ -1,0 +1,15 @@
+Foo {
+  @Bar
+  lorem : ipsum
+  another = value=q
+  * {
+    @ThisCanGetCrazy
+    # Random comment because why not?
+    # Random comment with tokens
+    long_line = Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vitae mauris eu eros cursus sodales. Phasellus dignissim vulputate libero. Curabitur sit amet lacus non dui vehicula ornare. Cras vel diam vel mi vehicula feugiat vel ut lacus. Vestibulum diam odio
+  }
+}
+
+Bar {
+  What : ever
+} 
