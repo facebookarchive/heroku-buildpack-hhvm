@@ -1,0 +1,41 @@
+#!/bin/bash
+
+BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
+source "$BASE_DIR/../lint"
+
+# Terminal color profiles
+GREEN_NO_BG=$(tput setaf 2)
+
+GREEN=$(tput setaf 7)$(tput setab 2)
+RED=$(tput setaf 7)$(tput setab 1)
+RESET=$(tput sgr0)
+
+# Loop through all files and try to match .out files value with lint output on
+# their .in counterparts.
+
+function run() {
+  shopt -s nullglob
+  for f in *; do
+    # Is it an .out file?
+    if [[ ${f:$((${#f}-3))} == "out" ]]; then
+      # Get .in file and compare the result of lint on it with the contents of .out
+      local expected="$(cat $f)"
+
+      local fin="${f:0:$((${#f}-3))}in"
+      local actual="$(lint $fin)"
+      
+      local test_name=${f:0:$((${#f}-4))}
+
+      if [[ ! "${actual}" == "${expected}" ]]; then
+        echo "$RED FAIL $RESET ${test_name} is broken"
+        diff <(lint "$fin") <(cat "$f") -y
+      else
+        echo "$GREEN PASS $RESET ${test_name} passes"
+      fi
+    fi
+  done
+}
+
+echo "$GREEN_NO_BG Running tests... $RESET"
+run
+echo "$GREEN_NO_BG Done. $RESET"
