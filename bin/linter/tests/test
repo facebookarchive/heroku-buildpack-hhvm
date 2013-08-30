@@ -13,6 +13,8 @@ RESET=$(tput sgr0)
 # Loop through all files and try to match .out files value with lint output on
 # their .in counterparts.
 
+FAILED=false
+
 function run() {
   shopt -s nullglob
   for f in *; do
@@ -29,6 +31,7 @@ function run() {
       if [[ ! "${actual}" == "${expected}" ]]; then
         echo "$RED FAIL $RESET ${test_name} is broken"
         diff <(lint "$fin") <(cat "$f") -y
+        FAILED=true
       else
         echo "$GREEN PASS $RESET ${test_name} passes"
       fi
@@ -39,3 +42,5 @@ function run() {
 echo "$GREEN_NO_BG Running tests... $RESET"
 run
 echo "$GREEN_NO_BG Done. $RESET"
+
+[[ $FAILED ]] && exit 1
