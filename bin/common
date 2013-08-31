@@ -9,3 +9,24 @@ function fetch_package() {
 
   curl "$package" -L -s -o - | tar xzf - -C "$location"
 }
+
+# Prints those fancy arrows that Heroku wants for the first param.
+# and prints indented lines for the rest of the params:
+#
+# cout "Lorem ipsum" "Foo" "Bar" 
+#
+# -----> Lorem ipsum
+#        Foo
+#        Bar
+function cout() {
+  local indent="-----> ";
+  local first_pass=1
+
+  for var in "$@"; do
+    echo "${indent}${var}"
+    if [[ $first_pass -eq 1 ]]; then
+      first_pass=0
+      indent='       '
+    fi
+  done
+}

@@ -13,38 +13,38 @@ source $BASE_DIR/linter/lint
 cd "$BUILD_DIR"
 
 # Download HHVM binaries, if necessary
-echo "-----> Vendoring HHVM ${HHVM_VERSION}"
+cout "Vendoring HHVM ${HHVM_VERSION}"
 if [ -d "$CACHE_DIR/hhvm" ]; then
-  echo "-----> $CACHE_DIR/hhvm exists, not downloading";
+  cout "$CACHE_DIR/hhvm exists, not downloading";
 else
-  echo "-----> Downloading HHVM"
+  cout "Downloading HHVM"
   [ ! -d "CACHE_DIR" ] && mkdir -p "$CACHE_DIR"
   mkdir "$CACHE_DIR/hhvm"
   fetch_package "$CACHE_DIR/hhvm"
 fi
 
 # Install HHVM binaries
-echo "-----> Vendoring binaries into slug"
+cout "Vendoring binaries into slug"
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
 cp -R "$CACHE_DIR/hhvm/" "vendor/hhvm"
 
 # Source config file
-echo "-----> Sourcing config.hdf"
+cout "Sourcing config.hdf"
 if [ -f "$BUILD_DIR/config.hdf" ]; then
-  echo "-----> Found custom config.hdf, linting"
+  cout "Found custom config.hdf, linting"
 
   lint_results="$(lint "$BUILD_DIR/config.hdf")"
   
   if [ "$lint_results" ]; then
     echo "$lint_results"
-    echo "-----> Aborting - can't push bad config"
+    cout "Aborting - can't push bad config"
     exit 1
   else 
-    echo "-----> Config file is valid, uploading"
+    cout "Config file is valid, uploading"
     cp "$BUILD_DIR/config.hdf" "vendor/hhvm"
   fi
 else 
-  echo "-----> Custom config.hdf not found, applying default"
+  cout "Custom config.hdf not found, applying default"
   cp "$BASE_DIR/../conf/config.hdf" "vendor/hhvm"
 fi
 

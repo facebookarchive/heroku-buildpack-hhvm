@@ -17,8 +17,7 @@ function is_node_name_valid() {
   if [[ ! $node_name =~ $pattern ]] ;then 
     continue
   else 
-    echo "-----> Unexpected node name in ${4} on line ${2}"
-    echo "       $3"
+    cout "Unexpected node name in ${4} on line ${2}" "$3"
   fi
 }
 
@@ -33,8 +32,7 @@ function is_config_line_valid() {
   if [[ ${1:0:1} == "@" || ${#pair_eq[@]} -ge 2 || ${#pair_colon[@]} -eq 2 ]]; then 
     continue
   else
-    echo "-----> Bad config value in ${4} on line ${2}"
-    echo "       $3"
+    cout "Bad config value in ${4} on line ${2}" "$3"
   fi
 }
 
@@ -66,7 +64,7 @@ function lint() {
     # found close tag, skip
     elif [[ ${line:0} == "}" ]]; then
       if [[ $braces_count -eq 0 ]]; then
-        echo "-----> Unexpected closing brace found on line ${line_no}"
+        cout "Unexpected closing brace found on line ${line_no}"
         # We need to reset the count or else it will yell at every closing
         # brace
         braces_count=0
@@ -81,6 +79,6 @@ function lint() {
   done < "$1"
 
   if [[ ! $braces_count -eq 0 ]]; then
-    echo "-----> Braces don't match. Found ${braces_count} more than expected."
+    cout "Braces don't match. Found ${braces_count} more than expected."
   fi
 }

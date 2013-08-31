@@ -1,6 +1,8 @@
 #!/bin/bash
 
 BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
+
+source "$BASE_DIR/../../common"
 source "$BASE_DIR/../lint"
 
 # Terminal color profiles
