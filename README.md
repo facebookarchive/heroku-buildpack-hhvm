@@ -21,7 +21,7 @@ Or to convert your existing PHP app:
     git push
 
 If your app needs a custom [configuration
-file](https://github.com/facebook/hiphop-php/blob/master/hphp/doc/options.compiled) just save it in the root of your project. Otherwise, a default one will be applied with the following settings:
+file](https://github.com/facebook/hiphop-php/wiki/Runtime-options) just save it in the root of your project. Otherwise, a default one will be applied with the following settings:
 
     Server {
       DefaultDocument = index.php
