@@ -5,28 +5,17 @@ shopt -s dotglob
 
 BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
 BUILD_DIR="$1"
-CACHE_DIR="$2"
 
 source $BASE_DIR/common
 source $BASE_DIR/linter/lint
 
 cd "$BUILD_DIR"
 
-# Download HHVM binaries, if necessary
-cout "Vendoring HHVM ${HHVM_VERSION}"
-if [ -d "$CACHE_DIR/hhvm" ]; then
-  cout "$CACHE_DIR/hhvm exists, not downloading";
-else
-  cout "Downloading HHVM"
-  [ ! -d "CACHE_DIR" ] && mkdir -p "$CACHE_DIR"
-  mkdir "$CACHE_DIR/hhvm"
-  fetch_package "$CACHE_DIR/hhvm"
-fi
-
-# Install HHVM binaries
-cout "Vendoring binaries into slug"
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
-cp -R "$CACHE_DIR/hhvm/" "vendor/hhvm"
+# Download HHVM binaries
+cout "Downloading HHVM"
+mkdir "$BUILD_DIR/vendor/hhvm"
+fetch_package "$BUILD_DIR/vendor/hhvm"
 
 # Source config file
 cout "Sourcing config.hdf"
