@@ -1,15 +1,5 @@
 #!/bin/bash
 
-function fetch_package() {
-  local location="$1"
-
-  mkdir -p "$location"
-
-  local package="http://dl.hhvm.com/heroku/hhvm.tgz"
-
-  curl "$package" -L -s -o - | tar xzf - -C "$location"
-}
-
 # Prints those fancy arrows that Heroku wants for the first param.
 # and prints indented lines for the rest of the params:
 #

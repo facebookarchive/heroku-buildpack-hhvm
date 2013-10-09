@@ -13,9 +13,10 @@ cd "$BUILD_DIR"
 
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
 # Download HHVM binaries
-cout "Downloading HHVM"
+package="http://dl.hhvm.com/heroku/hhvm.tgz"
+cout "Downloading HHVM from $package"
 mkdir "$BUILD_DIR/vendor/hhvm"
-fetch_package "$BUILD_DIR/vendor/hhvm"
+curl "$package" -L -s -o - | tar xzf - -C "$BUILD_DIR/vendor/hhvm"
 
 # Source config file
 cout "Sourcing config.hdf"
