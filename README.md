@@ -5,7 +5,7 @@
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks)
 for PHP apps to run on HHVM.
 
-The buildpack will detect your app as PHP if it has a `index.php` file in the 
+The buildpack will detect your app as PHP if it has a `index.php` or `composer.json` file in the 
 root. 
 
 ## Usage
