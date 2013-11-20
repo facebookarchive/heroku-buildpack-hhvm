@@ -5,6 +5,7 @@ shopt -s dotglob
 
 BASE_DIR="$( cd -P "$( dirname "$0" )" && pwd )"
 BUILD_DIR="$1"
+COMPOSER_URL="http://getcomposer.org/composer.phar"
 
 source $BASE_DIR/common
 source $BASE_DIR/linter/lint
@@ -43,4 +44,23 @@ test -d "vendor/hhvm"
 
 if [ -n "$BUILDPACK_DEBUG" ]; then
     ls -R vendor/hhvm
+fi
+
+# Composer Installation
+cout "Installing dependencies using Composer"
+if [ -f "composer.json" ]; then
+  if [ ! -f "composer.phar" ]; then
+    cout "Fetching composer.phar"
+    curl -LOs $COMPOSER_URL
+  fi
+
+  cout "Running: composer.phar install"
+
+  GIT_DIR_ORIG=$GIT_DIR
+  unset GIT_DIR
+  LD_LIBRARY_PATH=vendor/hhvm/ vendor/hhvm/hhvm -c vendor/hhvm/config.hdf composer.phar install -n --prefer-source | indent
+  rm -rf vendor/**/.git
+  export GIT_DIR=$GIT_DIR_ORIG
+else
+  cout "composer.json not found"
 fi
