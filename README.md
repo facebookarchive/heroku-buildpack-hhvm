@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ptarjan/heroku-buildpack-hhvm.png?branch=master)](https://travis-ci.org/ptarjan/heroku-buildpack-hhvm)
 
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks)
+This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) (and [Cloud Foundry Buildpack](http://docs.cloudfoundry.com/docs/using/deploying-apps/buildpacks.html))
 for PHP apps to run on HHVM.
 
 The buildpack will detect your app as PHP if it has a `index.php` or `composer.json` file in the 
