@@ -1,6 +1,6 @@
 # Heroku Buildpack for HHVM 
 
-[![Build Status](https://travis-ci.org/ptarjan/heroku-buildpack-hhvm.png?branch=master)](https://travis-ci.org/ptarjan/heroku-buildpack-hhvm)
+[![Build Status](https://travis-ci.org/hhvm/heroku-buildpack-hhvm.png?branch=master)](https://travis-ci.org/hhvm/heroku-buildpack-hhvm)
 
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) (and [Cloud Foundry Buildpack](http://docs.cloudfoundry.com/docs/using/deploying-apps/buildpacks.html))
 for PHP apps to run on HHVM.
@@ -12,11 +12,11 @@ root.
 
 To use it with a new app:
 
-    heroku create --buildpack https://github.com/ptarjan/heroku-buildpack-hhvm
+    heroku create --buildpack https://github.com/hhvm/heroku-buildpack-hhvm
 
 Or to convert your existing PHP app:
 
-    heroku config:set BUILDPACK_URL=https://github.com/ptarjan/heroku-buildpack-hhvm
+    heroku config:set BUILDPACK_URL=https://github.com/hhvm/heroku-buildpack-hhvm
     <make some git change and commit it>
     git push
 
