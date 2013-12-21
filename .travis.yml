@@ -1,2 +1,2 @@
-# Run linter tests
+# Linter tests
 script: "cd bin/linter/tests && ./test"
