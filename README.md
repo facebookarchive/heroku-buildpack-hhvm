@@ -26,6 +26,11 @@ If your app needs a custom [`config.hdf`](https://github.com/facebook/hiphop-php
       DefaultDocument = index.php
     }
 
+## CLI
+The buildpack can't set environment variables (slug compilation takes place on different dynos). If you plan to run HHVM from CLI, you can define `LD_LIBRARY_PATH` by running:
+    
+    heroku config:add LD_LIBRARY_PATH=vendor/hhvm/
+
 ## Performance
 
 You should see anywhere between 2x and 10x performance gains on your app. 
