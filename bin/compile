@@ -14,7 +14,7 @@ cd "$BUILD_DIR"
 
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
 # Download HHVM binaries
-package="http://dl.hhvm.com/heroku/hhvm.tgz"
+package="http://dl.hhvm.com/heroku/hhvm-nightly_2014.03.20~lucid.tgz"
 cout "Downloading HHVM from $package"
 mkdir "$BUILD_DIR/vendor/hhvm"
 curl "$package" -L -s -o - | tar xzf - -C "$BUILD_DIR/vendor/hhvm"
