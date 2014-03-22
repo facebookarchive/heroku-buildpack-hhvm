@@ -58,7 +58,7 @@ if [ -f "composer.json" ]; then
 
   GIT_DIR_ORIG=$GIT_DIR
   unset GIT_DIR
-  LD_LIBRARY_PATH=vendor/hhvm/ vendor/hhvm/hhvm -c vendor/hhvm/config.hdf composer.phar install -n --prefer-source | indent
+  LD_LIBRARY_PATH=vendor/hhvm/ vendor/hhvm/hhvm -c vendor/hhvm/config.hdf composer.phar install -n | indent
   rm -rf vendor/**/.git
   export GIT_DIR=$GIT_DIR_ORIG
 else
