@@ -39,6 +39,6 @@ This means you will need fewer dynos to serve the same amount of traffic.
 ## Problems
 
 If you have some PHP code that won't run with HHVM, we would love you to send 
-us example code and [open a task](https://github.com/facebook/hiphop-php/). 
+us example code and [open an issue](https://github.com/facebook/hhvm/). 
 HHVM's goal is to support all open source projects, so please report any and 
 all issues.
