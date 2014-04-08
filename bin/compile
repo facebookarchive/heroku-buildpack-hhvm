@@ -10,11 +10,11 @@ COMPOSER_URL="http://getcomposer.org/composer.phar"
 source $BASE_DIR/common
 source $BASE_DIR/linter/lint
 
-if [ -f "$1/composer.json" ] || [ -f "$1/index.php" ]; then
+if [ -f "$BUILD_DIR/composer.json" ] || [ -f "$BUILD_DIR/index.php" ]; then
   TYPE=php
 fi
 
-if [ -f "$1/index.hh" ]; then
+if [ -f "$BUILD_DIR/index.hh" ]; then
   TYPE=hack
 fi
 
