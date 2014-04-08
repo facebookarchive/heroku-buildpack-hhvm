@@ -10,6 +10,14 @@ COMPOSER_URL="http://getcomposer.org/composer.phar"
 source $BASE_DIR/common
 source $BASE_DIR/linter/lint
 
+if [ -f "$1/composer.json" ] || [ -f "$1/index.php" ]; then
+  TYPE=php
+fi
+
+if [ -f "$1/index.hh" ]; then
+  TYPE=hack
+fi
+
 cd "$BUILD_DIR"
 
 [ ! -d "$BUILD_DIR/vendor" ] && mkdir -p "$BUILD_DIR/vendor"
@@ -36,7 +44,7 @@ if [ -f "$BUILD_DIR/config.hdf" ]; then
   fi
 else 
   cout "Custom config.hdf not found, applying default"
-  cp "$BASE_DIR/../conf/config.hdf" "vendor/hhvm"
+  cp "$BASE_DIR/../conf/config-$TYPE.hdf" "vendor/hhvm"
 fi
 
 # Test that all packages were fetched and extracted successfully
