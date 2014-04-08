@@ -44,7 +44,7 @@ if [ -f "$BUILD_DIR/config.hdf" ]; then
   fi
 else 
   cout "Custom config.hdf not found, applying default for $TYPE"
-  cp "$BASE_DIR/../conf/config-$TYPE.hdf" "vendor/hhvm"
+  cp "$BASE_DIR/../conf/config-$TYPE.hdf" "vendor/hhvm/config.hdf"
 fi
 
 # Test that all packages were fetched and extracted successfully
