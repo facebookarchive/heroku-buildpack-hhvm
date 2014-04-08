@@ -4,4 +4,8 @@ if [ -f "$1/composer.json" ] || [ -f "$1/index.php" ]; then
   echo "PHP (HHVM)" && exit 0
 fi
 
+if [ -f "$1/index.hh" ]; then
+  echo "Hack (HHVM)" && exit 0
+fi
+
 exit 1
