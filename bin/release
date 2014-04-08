@@ -1,9 +1,21 @@
 #!/bin/bash
 
-cat << EOF
+if [ -f "$1/composer.json" ] || [ -f "$1/index.php" ]; then
+	cat << EOF
 ---
 addons:
 config_vars:
 default_process_types:
-  web: LD_LIBRARY_PATH=vendor/hhvm/ vendor/hhvm/hhvm -m server -p \$PORT -c vendor/hhvm/config.hdf
+  web: LD_LIBRARY_PATH=vendor/hhvm/ vendor/hhvm/hhvm -m server -p \$PORT -c vendor/hhvm/config-php.hdf
 EOF
+fi
+
+if [ -f "$1/index.hh" ]; then
+	cat << EOF
+---
+addons:
+config_vars:
+default_process_types:
+  web: LD_LIBRARY_PATH=vendor/hhvm/ vendor/hhvm/hhvm -m server -p \$PORT -c vendor/hhvm/config-hack.hdf
+EOF
+fi
